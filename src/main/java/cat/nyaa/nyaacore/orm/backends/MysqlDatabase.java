@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @deprecated stub code, not implemented
- */
-@Deprecated
+///**
+// * @deprecated stub code, not implemented
+// */
+//@Deprecated
 public class MysqlDatabase implements IConnectedDatabase {
 
     public MysqlDatabase(Connection conn) {
