@@ -425,14 +425,14 @@ public abstract class CommandReceiver implements CommandExecutor, TabCompleter {
     }
 
     private String getHelpContent(String type, String... subkeys) {
-        String key = "manual";
+        StringBuilder key = new StringBuilder("manual");
         for (String s : subkeys) {
             if (s != null && s.length() > 0)
-                key += "." + s;
+                key.append(".").append(s);
         }
-        key += "." + type;
-        if (i18n.hasKey(key)) {
-            return i18n.getFormatted(key);
+        key.append(".").append(type);
+        if (i18n.hasKey(key.toString())) {
+            return i18n.getFormatted(key.toString());
         } else {
             return i18n.getFormatted("manual.no_" + type);
         }
@@ -443,19 +443,19 @@ public abstract class CommandReceiver implements CommandExecutor, TabCompleter {
         List<String> cmds = new ArrayList<>(subCommands.keySet());
         cmds.sort(Comparator.naturalOrder());
 
-        String tmp = "";
+        StringBuilder tmp = new StringBuilder();
         for (String cmd : cmds) {
             if (!subCommands.get(cmd).hasPermission(sender)) continue;
-            tmp += "\n    " + cmd + ":  " + getHelpContent("description", getHelpPrefix(), cmd) + ChatColor.RESET;
-            tmp += "\n    " + cmd + ":  " + getHelpContent("usage", getHelpPrefix(), cmd) + ChatColor.RESET;
+            tmp.append("\n    ").append(cmd).append(":  ").append(getHelpContent("description", getHelpPrefix(), cmd)).append(ChatColor.RESET);
+            tmp.append("\n    ").append(cmd).append(":  ").append(getHelpContent("usage", getHelpPrefix(), cmd)).append(ChatColor.RESET);
         }
 
         if (defaultSubCommand != null && defaultSubCommand.hasPermission(sender)) {
             String cmd = "<default>";
-            tmp += "\n    " + cmd + ":  " + getHelpContent("description", getHelpPrefix(), cmd) + ChatColor.RESET;
-            tmp += "\n    " + cmd + ":  " + getHelpContent("usage", getHelpPrefix(), cmd) + ChatColor.RESET;
+            tmp.append("\n    ").append(cmd).append(":  ").append(getHelpContent("description", getHelpPrefix(), cmd)).append(ChatColor.RESET);
+            tmp.append("\n    ").append(cmd).append(":  ").append(getHelpContent("usage", getHelpPrefix(), cmd)).append(ChatColor.RESET);
         }
-        sender.sendMessage(tmp);
+        sender.sendMessage(tmp.toString());
     }
 
     public static Player asPlayer(CommandSender target) {
@@ -473,13 +473,21 @@ public abstract class CommandReceiver implements CommandExecutor, TabCompleter {
     public static ItemStack getItemInHand(CommandSender se) {
         if (se instanceof Player) {
             Player p = (Player) se;
-            if (p.getInventory() != null) {
-                ItemStack i = p.getInventory().getItemInMainHand();
-                if (i != null && i.getType() != Material.AIR) {
-                    return i;
-                }
+            p.getInventory();
+            ItemStack i = p.getInventory().getItemInMainHand();
+            if (i.getType() != Material.AIR) {
+                return i;
             }
             throw new NoItemInHandException(false);
+        } else {
+            throw new NotPlayerException();
+        }
+    }
+
+    public static void setItemInHand(CommandSender se, ItemStack item) {
+        if (se instanceof Player) {
+            Player p = (Player) se;
+            p.getInventory().setItemInMainHand(item);
         } else {
             throw new NotPlayerException();
         }
@@ -488,13 +496,19 @@ public abstract class CommandReceiver implements CommandExecutor, TabCompleter {
     public static ItemStack getItemInOffHand(CommandSender se) {
         if (se instanceof Player) {
             Player p = (Player) se;
-            if (p.getInventory() != null) {
-                ItemStack i = p.getInventory().getItemInOffHand();
-                if (i != null && i.getType() != Material.AIR) {
-                    return i;
-                }
+            ItemStack i = p.getInventory().getItemInOffHand();
+            if (i.getType() != Material.AIR) {
+                return i;
             }
             throw new NoItemInHandException(true);
+        } else {
+            throw new NotPlayerException();
+        }
+    }
+    public static void setItemInOffHand(CommandSender se, ItemStack item) {
+        if (se instanceof Player) {
+            Player p = (Player) se;
+            p.getInventory().setItemInOffHand(item);
         } else {
             throw new NotPlayerException();
         }
