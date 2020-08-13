@@ -1,7 +1,7 @@
 package cat.nyaa.nyaacore.utils;
 
-import net.minecraft.server.v1_16_R1.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_16_R2.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemNBTUtils {
@@ -10,12 +10,12 @@ public class ItemNBTUtils {
 
     public ItemNBTUtils(ItemStack item) {
         this.item = item;
-        net.minecraft.server.v1_16_R1.ItemStack NMSItem = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_16_R2.ItemStack NMSItem = CraftItemStack.asNMSCopy(item);
         NBT = NMSItem.getOrCreateTag();
     }
 
     public ItemStack saveNBT() {
-        net.minecraft.server.v1_16_R1.ItemStack NMSItem = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_16_R2.ItemStack NMSItem = CraftItemStack.asNMSCopy(item);
         NMSItem.setTag(NBT);
         return CraftItemStack.asBukkitCopy(NMSItem.cloneItemStack());
     }
