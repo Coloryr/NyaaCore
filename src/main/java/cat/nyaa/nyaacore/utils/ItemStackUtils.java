@@ -30,11 +30,13 @@ import java.util.zip.InflaterInputStream;
 public final class ItemStackUtils {
     private static final String NYAACORE_ITEMSTACK_DATAVERSION_KEY = "nyaacore_itemstack_dataversion";
     private static final int NYAACORE_ITEMSTACK_DEFAULT_DATAVERSION = 1139;
+    private static final ThreadLocal<Inflater> NYAA_INFLATER = ThreadLocal.withInitial(Inflater::new);
+    private static final ThreadLocal<Deflater> NYAA_DEFLATER = ThreadLocal.withInitial(Deflater::new);
+    private static final int currentDataVersion;
+    private static final Cache<String, List<ItemStack>> itemDeserializerCache = CacheBuilder.newBuilder()
+            .weigher((String k, List<ItemStack> v) -> k.getBytes().length)
+            .maximumWeight(100L * 1024 * 1024).build(); // Hard Coded 100M
     private static NBTReadLimiter unlimitedNBTReadLimiter = null;
-    private static int currentDataVersion;
-    private static Cache<String, List<ItemStack>> itemDeserializerCache = CacheBuilder.newBuilder()
-                                                                                      .weigher((String k, List<ItemStack> v) -> k.getBytes().length)
-                                                                                      .maximumWeight(100L * 1024 * 1024).build(); // Hard Coded 100M
 
     static {
         //noinspection deprecation
@@ -105,9 +107,6 @@ public final class ItemStackUtils {
         net.minecraft.world.item.ItemStack reconstructedNativeItemStack = net.minecraft.world.item.ItemStack.a(reconstructedNBTTagCompound);
         return CraftItemStack.asBukkitCopy(reconstructedNativeItemStack);
     }
-
-    private static final ThreadLocal<Inflater> NYAA_INFLATER = ThreadLocal.withInitial(Inflater::new);
-    private static final ThreadLocal<Deflater> NYAA_DEFLATER = ThreadLocal.withInitial(Deflater::new);
 
     private static byte[] compress(byte[] data) {
         byte[] ret;

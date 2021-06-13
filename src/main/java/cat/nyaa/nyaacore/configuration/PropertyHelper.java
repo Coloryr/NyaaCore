@@ -22,19 +22,6 @@ import java.util.stream.Stream;
 public class PropertyHelper {
     private static final Pattern VALID_KEY = Pattern.compile("[a-z0-9/._-]+");
 
-    public void setProperty(CommandSender sender, Arguments arguments, ISerializable resourceConfig) {
-        String inst = arguments.nextString();
-        String[] split = inst.split(":", 2);
-
-        Class<? extends ISerializable> aClass = resourceConfig.getClass();
-        List<Field> allFields = ReflectionUtils.getAllFields(aClass);
-        Field declaredField = allFields.stream()
-                .filter(field -> field.getName().equals(split[0]))
-                .findFirst().orElseThrow(BadCommandException::new);
-        String obj = split[1];
-        setProperty(sender, resourceConfig, declaredField, obj);
-    }
-
     public static void setProperty(CommandSender sender, ISerializable power, Field field, String value) {
         try {
             if (value.equals("null")) {
@@ -177,6 +164,7 @@ public class PropertyHelper {
      * return a list of properties in a iSerializable class
      * formatted in {@Code <property_name>:<value>}
      * safe to use by {@Link setUnchecked()}
+     *
      * @param iSerializableClass class to resolve
      * @return a List of String that can be used in tab completion.
      */
@@ -204,6 +192,19 @@ public class PropertyHelper {
             throw new BadCommandException("message.error.invalid_command_arg");
         }
         return m;
+    }
+
+    public void setProperty(CommandSender sender, Arguments arguments, ISerializable resourceConfig) {
+        String inst = arguments.nextString();
+        String[] split = inst.split(":", 2);
+
+        Class<? extends ISerializable> aClass = resourceConfig.getClass();
+        List<Field> allFields = ReflectionUtils.getAllFields(aClass);
+        Field declaredField = allFields.stream()
+                .filter(field -> field.getName().equals(split[0]))
+                .findFirst().orElseThrow(BadCommandException::new);
+        String obj = split[1];
+        setProperty(sender, resourceConfig, declaredField, obj);
     }
 
 }

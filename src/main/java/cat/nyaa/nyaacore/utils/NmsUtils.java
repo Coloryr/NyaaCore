@@ -78,8 +78,8 @@ public final class NmsUtils {
     /**
      * Update the yaw &amp; pitch of entities. Can be used to set head orientation.
      *
-     * @param entity the living entity
-     * @param newYaw can be null if not to be modified
+     * @param entity   the living entity
+     * @param newYaw   can be null if not to be modified
      * @param newPitch can be null if not to be modified
      */
     public static void updateEntityYawPitch(LivingEntity entity, Float newYaw, Float newPitch) {
@@ -113,6 +113,11 @@ public final class NmsUtils {
 
     public static List<Block> getTileEntities(World world){
         List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().capturedTileEntities.values().stream().toList();
+        nmsEntity.getHandle().setOnGround(isOnGround); //nms method renamed
+    }
+
+    public static List<Block> getTileEntities(World world) {
+        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().tileEntityListTick;
         // Safe to parallelize getPosition and getBlockAt
         return tileEntityList.stream().parallel().map(TileEntity::getPosition).map(p -> world.getBlockAt(p.getX(), p.getY(), p.getZ())).collect(Collectors.toList());
     }

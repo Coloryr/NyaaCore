@@ -13,17 +13,17 @@ import org.bukkit.craftbukkit.v1_17_R1.util.CraftMagicNumbers;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NyaaCoreLoader extends JavaPlugin {
+    public static final String TARGET_MAPPING = "c2d5d7871edcc4fb0f81d18959c647af";
     private static NyaaCoreLoader instance;
+
+    static {
+        ConfigurationSerialization.registerClass(NbtItemStack.class);
+    }
+
     public TimerManager timerManager;
 
     public static NyaaCoreLoader getInstance() {
         return instance;
-    }
-
-    public static final String TARGET_MAPPING = "a69acbca3007d2ae1b4b69881f0ab9ad";
-
-    static {
-        ConfigurationSerialization.registerClass(NbtItemStack.class);
     }
 
     @Override
@@ -37,11 +37,11 @@ public class NyaaCoreLoader extends JavaPlugin {
     public void onEnable() {
         try {
             boolean check = MappingChecker.check();
-            if (!check){
-                getLogger().severe("CraftBukkit Mapping changed! Use with caution!");
+            if (!check) {
+                getLogger().severe("Unsupported NMS Mapping version detected. Unexpected error may occurred.");
             }
-        } catch (NoSuchMethodError e){
-            getLogger().info("Cannot detect CraftBukkit Mapping!");
+        } catch (NoSuchMethodError e) {
+            getLogger().info("Can not detect CraftBukkit NMS Mapping version. Unexpected error may occurred.");
         }
         HttpClient.init(0);
         IMessageQueue.DefaultMessageQueue defaultMessageQueue = new IMessageQueue.DefaultMessageQueue();

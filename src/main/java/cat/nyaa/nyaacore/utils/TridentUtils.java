@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 
 public final class TridentUtils {
 
-    private static Class<?> entityThrownTrident = ReflectionUtils.getNMSClass("EntityThrownTrident");
+    private static final Class<?> entityThrownTrident = ReflectionUtils.getNMSClass("EntityThrownTrident");
 
     private static Field entityThrownTridentFieldAx;
 
