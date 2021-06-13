@@ -111,13 +111,8 @@ public final class NmsUtils {
         nmsEntity.getHandle().setOnGround(isOnGround);
     }
 
-    public static List<Block> getTileEntities(World world){
-        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().capturedTileEntities.values().stream().toList();
-        nmsEntity.getHandle().setOnGround(isOnGround); //nms method renamed
-    }
-
     public static List<Block> getTileEntities(World world) {
-        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().tileEntityListTick;
+        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().capturedTileEntities.values().stream().toList();
         // Safe to parallelize getPosition and getBlockAt
         return tileEntityList.stream().parallel().map(TileEntity::getPosition).map(p -> world.getBlockAt(p.getX(), p.getY(), p.getZ())).collect(Collectors.toList());
     }

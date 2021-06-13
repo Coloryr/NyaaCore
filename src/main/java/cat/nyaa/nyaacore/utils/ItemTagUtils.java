@@ -296,8 +296,6 @@ public class ItemTagUtils {
         return Optional.of(value);
     }
 
-    static Field handle;
-
     private static Optional<net.minecraft.world.item.ItemStack> getItem(ItemStack itemStack) throws NoSuchFieldException, IllegalAccessException {
         if (!(itemStack instanceof CraftItemStack)){
             return Optional.empty();
