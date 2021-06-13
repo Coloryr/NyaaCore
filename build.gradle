@@ -1,14 +1,14 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 ext.majorVersion = 7
-ext.minorVersion = 5
-ext.minecraftVersion = "1.16.3"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+ext.minorVersion = 6
+ext.minecraftVersion = "1.17"
+sourceCompatibility = 1.16
+targetCompatibility = 1.16
 
 // Suppiled by Jenkins
 ext.buildNumber = System.env.BUILD_NUMBER == null ? "x"                : "$System.env.BUILD_NUMBER"
@@ -54,12 +54,13 @@ compileJava {
 
 repositories {
     jcenter()
-    maven { name 'Spigot';      url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { name 'Sonatype';    url 'https://oss.sonatype.org/content/groups/public' }
-    maven { name 'vault-repo';  url 'http://nexus.hc.to/content/repositories/pub_releases' }
-    maven { name 'EssentialsX'; url 'https://ci.ender.zone/plugin/repository/everything' }
-    maven { name 'NyaaCat';     url 'https://ci.nyaacat.com/maven/' }
-    maven { name 'aikar';     url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { name 'Spigot'; url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/';
+        allowInsecureProtocol true }
+    maven { name 'Sonatype'; url 'https://oss.sonatype.org/content/groups/public'; allowInsecureProtocol true }
+    maven { name 'vault-repo'; url 'http://nexus.hc.to/content/repositories/pub_releases'; allowInsecureProtocol true }
+    maven { name 'EssentialsX'; url 'https://ci.ender.zone/plugin/repository/everything'; allowInsecureProtocol true }
+    maven { name 'NyaaCat'; url 'https://ci.nyaacat.com/maven/'; allowInsecureProtocol true }
+    maven { name 'aikar'; url 'https://repo.aikar.co/content/groups/aikar/'; allowInsecureProtocol true }
 }
 
 dependencies {
@@ -70,7 +71,7 @@ dependencies {
 
     // other plugins
     compileOnly('net.milkbowl.vault:VaultAPI:1.7') { transitive = false }  // soft dep
-    compileOnly('net.ess3:EssentialsX:2.17.1') { transitive = false }      // soft dep
+    compileOnly('net.ess3:EssentialsX:2.19.1') { transitive = false }      // soft dep
 
     // 3rd party packages to be shadowed
     api 'com.udojava:EvalEx:2.1'

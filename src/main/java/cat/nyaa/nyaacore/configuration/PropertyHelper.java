@@ -138,7 +138,7 @@ public class PropertyHelper {
                 }
                 field.set(power, item.clone());
             } else if (field.getType() == Enchantment.class) {
-                Enchantment enchantment;
+                Enchantment enchantment = null;
                 if (VALID_KEY.matcher(value).matches()) {
                     enchantment = Enchantment.getByKey(NamespacedKey.minecraft(value));
                 } else if (value.contains(":")) {
@@ -148,7 +148,12 @@ public class PropertyHelper {
                         enchantment = Enchantment.getByKey(new NamespacedKey(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(value.split(":", 2)[0])), value.split(":", 2)[1]));
                     }
                 } else {
-                    enchantment = Enchantment.getByName(value);
+                    var list = Enchantment.values();
+                    for (var item : list) {
+                        if (item.getKey().getKey().equalsIgnoreCase(value)) {
+                            enchantment = item;
+                        }
+                    }
                 }
                 if (enchantment == null) {
                     enchantment = Arrays.stream(Enchantment.class.getDeclaredFields()).parallel().filter(f -> Modifier.isStatic(f.getModifiers())).filter(f -> f.getName().equals(value)).findAny().map(f -> {
@@ -196,11 +201,7 @@ public class PropertyHelper {
     private static Material getMaterial(String name) {
         Material m = Material.matchMaterial(name, false);
         if (m == null) {
-            m = Material.matchMaterial(name, true);
-            if (m != null) {
-                m = Bukkit.getUnsafe().fromLegacy(m);
-                throw new BadCommandException("message.error.invalid_command_arg");
-            }
+            throw new BadCommandException("message.error.invalid_command_arg");
         }
         return m;
     }

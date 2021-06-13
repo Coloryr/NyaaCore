@@ -17,7 +17,7 @@ public final class TeleportUtils {
         Essentials ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
         if (ess != null) {
             try {
-                ess.getUser(player).getTeleport().now(loc, false, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                ess.getUser(player).getAsyncTeleport().now(loc, false, PlayerTeleportEvent.TeleportCause.PLUGIN, null);
                 return true;
             } catch (Exception e) {
                 return false;

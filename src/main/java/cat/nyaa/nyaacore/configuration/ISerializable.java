@@ -151,7 +151,7 @@ public interface ISerializable {
                     if (!sec.isString("__class__")) throw new RuntimeException("Missing __class__ key: " + f.toString());
                     String clsName = sec.getString("__class__");
                     Class cls = Class.forName(clsName);
-                    ISerializable o = (ISerializable) cls.newInstance();
+                    ISerializable o = (ISerializable) cls.getDeclaredConstructor().newInstance();
                     o.deserialize(sec);
                     newValue = o;
                 //} else if (List.class.isAssignableFrom(f.getType())) {
@@ -166,7 +166,7 @@ public interface ISerializable {
                             if (!newSec.isString("__class__")) throw new RuntimeException("Missing __class__ key: " + f.toString());
                             String clsName = newSec.getString("__class__");
                             Class cls = Class.forName(clsName);
-                            ISerializable o = (ISerializable) cls.newInstance();
+                            ISerializable o = (ISerializable) cls.getDeclaredConstructor().newInstance();
                             o.deserialize(newSec);
                             map.put(key, o);
                         } else {

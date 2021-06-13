@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -66,7 +67,7 @@ public class Message {
             ItemStack clone = items[i].clone();
             boolean hasCustomName = clone.hasItemMeta() && clone.getItemMeta().hasDisplayName();
             BaseComponent cmp = hasCustomName ? new TextComponent(clone.getItemMeta().getDisplayName()) : LocaleUtils.getNameComponent(clone);
-            cmp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[]{new TextComponent(getItemJsonStripped(clone))}));
+            cmp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new Text(getItemJsonStripped(clone))));
             varMap.put(String.format("{amount:%d}", i), new TextComponent(Integer.toString(clone.getAmount())));
             varMap.put(String.format("{itemName:%d}", i), cmp);
             if (i == 0) {

@@ -1,13 +1,18 @@
 package cat.nyaa.nyaacore.utils;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.v1_16_R2.*;
+import net.minecraft.advancements.critereon.CriterionConditionNBT;
+import net.minecraft.nbt.MojangsonParser;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.entity.TileEntity;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
@@ -25,7 +30,7 @@ import java.util.stream.Collectors;
 public final class NmsUtils {
     /* see CommandEntityData.java */
     public static void setEntityTag(Entity e, String tag) {
-        net.minecraft.server.v1_16_R2.Entity nmsEntity = ((CraftEntity) e).getHandle();
+        net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) e).getHandle();
 
         if (nmsEntity instanceof EntityHuman) {
             throw new IllegalArgumentException("Player NBT cannot be edited");
@@ -52,7 +57,7 @@ public final class NmsUtils {
     }
 
     public static boolean createExplosion(World world, Entity entity, double x, double y, double z, float power, boolean setFire, boolean breakBlocks) {
-        return !((CraftWorld) world).getHandle().createExplosion(((CraftEntity) entity).getHandle(), x, y, z, power, setFire, breakBlocks ? Explosion.Effect.BREAK : Explosion.Effect.NONE).wasCanceled;
+        return !((CraftWorld) world).getHandle().createExplosion(((CraftEntity) entity).getHandle(), x, y, z, power, setFire, breakBlocks ? Explosion.Effect.b : Explosion.Effect.a).wasCanceled;
     }
 
     //**
@@ -107,13 +112,13 @@ public final class NmsUtils {
     }
 
     public static List<Block> getTileEntities(World world){
-        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().tileEntityListTick;
+        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().capturedTileEntities.values().stream().toList();
         // Safe to parallelize getPosition and getBlockAt
         return tileEntityList.stream().parallel().map(TileEntity::getPosition).map(p -> world.getBlockAt(p.getX(), p.getY(), p.getZ())).collect(Collectors.toList());
     }
 
     public static List<BlockState> getTileEntityBlockStates(World world){
-        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().tileEntityListTick;
+        List<TileEntity> tileEntityList = ((CraftWorld) world).getHandle().capturedTileEntities.values().stream().toList();
         // Not safe to parallelize getState
         return tileEntityList.stream().map(TileEntity::getPosition).map(p -> world.getBlockAt(p.getX(), p.getY(), p.getZ())).map(Block::getState).collect(Collectors.toList());
     }
